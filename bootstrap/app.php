@@ -11,8 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // mendaftarkan alias route middleware
+        $middleware->alias(['isAdmin' => \App\Http\Middleware\IsAdmin::class,]);
+        
+        //tambahkan alias lain di sini
+
+        $middleware->api(append: [
+            //e.g SomeApiMiddleware::class
+        ]);
     })
+
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
