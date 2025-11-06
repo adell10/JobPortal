@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\JobController;
+use App\Http\Middleware\IsAdmin;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
@@ -46,7 +47,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('dashboard.jobseeker');
     })->name('jobseeker.dashboard');
 });
-
+ 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -57,8 +58,16 @@ Route::get('/admin', function () {
     return "Halaman Admin!";
 })->middleware(['auth', 'isAdmin']);
 
+// Route::get('/admin/jobs', function () {
+//     return view('admin.jobs');
+// })->middleware(['auth', 'isAdmin']);
+
 Route::get('/admin/jobs', function () {
-    return view('admin.jobs');
+    return redirect()->route('jobs.index');
 })->middleware(['auth', 'isAdmin']);
+
+
+Route::resource('jobs',
+JobController::class)->middleware(['auth', 'isAdmin']);
 
 require __DIR__.'/auth.php';
