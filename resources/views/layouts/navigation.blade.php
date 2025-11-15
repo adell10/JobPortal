@@ -1,5 +1,4 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
@@ -15,6 +14,22 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @if(Auth::check() && Auth::user()->role === 'admin')
+                        <x-nav-link :href="route('jobs.index')" :active="request()->routeIs('jobs.*')">
+                            {{ __('Kelola Lowongan') }}
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('applications.index')" :active="request()->routeIs('applications.*')">
+                            {{ __('Kelola Pelamar') }}
+                        </x-nav-link>
+                    @endif
+
+                    @if(Auth::check() && Auth::user()->role === 'jobseeker')
+                        <x-nav-link :href="route('jobs.index')" :active="request()->routeIs('jobs.*')">
+                            {{ __('Daftar Lowongan') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
