@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ApplicationsExport;
+use App\Jobs\SendApplicationMailJob;
+use App\Mail\ApplicationStatusMail;
+use App\Mail\JobAppliedMail;
 use App\Models\Application;
+use App\Models\User;
+use App\Notifications\NewApplicationNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
+
 
 class ApplicationController extends Controller
 {
@@ -38,14 +46,37 @@ class ApplicationController extends Controller
 
         $cvPath = $request->file('cv')->store('cvs', 'public');
 
-        Application::create([
+        $application = Application::create([
             'user_id' => Auth::id(),
             'job_id' => $jobId,
             'cv' => $cvPath,
         ]);
 
+        $application->load('job', 'user');
+
+        // Mail::to($application->user->email)
+        // ->send(new JobAppliedMail($application->job, $application->user));
+
+        //baru dikomen
+        // SendApplicationMailJob::dispatch($application);
+
+        SendApplicationMailJob::dispatch($application->id)
+        ->delay(now()->addSeconds(5));
+        
+        $admin = User::where('role', 'admin')->first();
+
+        if ($admin) {
+            $admin->notify(new NewApplicationNotification($application));
+        } else {
+            Log::warning('Admin tidak ditemukan!');
+        }
+
         return back()->with('success', 'Lamaran berhasil dikirim!');
     }
+
+
+   
+
 
     /**
      * Display the specified resource.
@@ -73,6 +104,9 @@ class ApplicationController extends Controller
         $application->update([
             'status' => $request->status
         ]);
+
+        Mail::to($application->user->email)
+        ->send(new ApplicationStatusMail($application));
 
         return back()->with('success', 'Status pelamar berhasil diperbarui!');
     }

@@ -70,15 +70,15 @@ Route::get('/admin/jobs', function () {
 Route::post('/jobs/import', [JobController::class,
 'import'])->name('jobs.import')->middleware('isAdmin');
 
-// Menampilkan daftar lowongan & detail (untuk semua user login)
-Route::resource('jobs', JobController::class)
-->only(['index', 'show'])
-->middleware(['auth']);
-
 // CRUD lowongan (khusus admin)
 Route::resource('jobs',JobController::class)
 ->except(['index', 'show'])
 ->middleware(['auth', 'isAdmin']);
+
+// Menampilkan daftar lowongan & detail (untuk semua user login)
+Route::resource('jobs', JobController::class)
+->only(['index', 'show'])
+->middleware(['auth']);
 
 // Kirim lamaran pekerjaan (jobseeker)
 Route::post('/jobs/{job}/apply',
@@ -104,5 +104,18 @@ Route::resource('applications',ApplicationController::class)
 Route::resource('applications',ApplicationController::class)
 ->only(['index', 'show'])
 ->middleware(['auth']);
+
+// Route untuk akses/download CV
+Route::get('/cv/{application}', function ($id) {
+    $application = \App\Models\Application::findOrFail($id);
+    $path = storage_path('app/public/' . $application->cv);
+    
+    if (!file_exists($path)) {
+        abort(404, 'File CV tidak ditemukan');
+    }
+    
+    // Tampilkan file di browser
+    return response()->file($path);
+})->name('cv.show')->middleware('auth');
 
 require __DIR__.'/auth.php';

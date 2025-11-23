@@ -8,14 +8,26 @@ use Illuminate\Database\Eloquent\Model;
 class JobVacancy extends Model
 {
     use HasFactory;
-        protected $table = 'job_vacancies';
-        protected $fillable = [
-            'title',
-            'description',
-            'location',
-            'company',
-            'logo',
-            'salary',
-            'job_type',
-        ];
+
+    protected $table = 'job_vacancies';
+
+    protected $fillable = [
+        'title',
+        'description',
+        'location',
+        'company',
+        'logo',
+        'salary',
+        'job_type',
+    ];
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class, 'job_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

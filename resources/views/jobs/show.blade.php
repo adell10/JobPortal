@@ -27,11 +27,18 @@
                 @auth
                     @if (Auth::user()->role === 'jobseeker')
                         <form action="{{ route('apply.store', $job->id) }}" 
-                              method="POST" 
-                              enctype="multipart/form-data">
+                            method="POST" 
+                            enctype="multipart/form-data">
                             @csrf
                             <label class="block mb-2">Upload CV:</label>
-                            <input type="file" name="cv" required class="mb-4">
+                            <input type="file" 
+                                name="cv" 
+                                required 
+                                accept=".pdf"
+                                class="mb-2">
+                            <p class="text-sm text-gray-600 mb-4">
+                                Format: PDF | Maksimal: 2MB
+                            </p>
 
                             <button type="submit"
                                 class="bg-green-600 text-white px-3 py-2 rounded-md">

@@ -81,11 +81,8 @@ use Illuminate\Support\Facades\Storage;
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul</th>
-                                    {{-- <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th> --}}
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Perusahaan</th>
-                                    {{-- <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th> --}}
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gaji</th>
-                                    {{-- <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Logo</th> --}}
                                     <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                                 </tr>
                             </thead>
@@ -94,29 +91,10 @@ use Illuminate\Support\Facades\Storage;
                                 @forelse ($jobs as $job)
                                     <tr>
                                         <td class="px-4 py-3 text-sm text-gray-700">{{ $job->title }}</td>
-                                        {{-- <td class="px-4 py-3 text-blue-600 underline text-sm">
-                                            <a href="{{ route('jobs.show', $job->id) }}">
-                                                {{ $job->title }}
-                                            </a>
-                                        </td> --}}
-
-                                        {{-- <td class="px-4 py-3 text-sm text-gray-700">{{ $job->description }}</td> --}}
                                         <td class="px-4 py-3 text-sm text-gray-700">{{ $job->company }}</td>
-                                        {{-- <td class="px-4 py-3 text-sm text-gray-700">{{ $job->location }}</td> --}}
                                         <td class="px-4 py-3 text-sm text-gray-700">
                                             {{ $job->salary ? 'Rp ' . number_format($job->salary, 0, ',', '.') : '-' }}
                                         </td>
-
-                                        {{-- <td class="px-4 py-3 text-sm text-gray-700 text-center align-middle">
-                                            @if ($job->logo)
-                                                <img src="{{ asset('storage/' . $job->logo) }}" 
-                                                     alt="Logo {{ $job->company }}" 
-                                                     class="mx-auto object-contain"
-                                                     style="max-height:100px; max-width:120px;">
-                                            @else
-                                                <span class="text-gray-400 text-xs">No Logo</span>
-                                            @endif
-                                        </td> --}}
 
                                         <td class="px-4 py-3 text-sm text-gray-700 align-middle text-center">
                                             <div class="flex flex-col sm:flex-row items-start justify-center gap-2">
@@ -143,18 +121,6 @@ use Illuminate\Support\Facades\Storage;
 
                                                 @auth
                                                     @if (Auth::user()->role === 'jobseeker')
-                                                        {{-- <form action="{{ route('apply.store', $job->id) }}" 
-                                                            method="POST" 
-                                                            enctype="multipart/form-data"
-                                                            class="flex flex-col items-start gap-1">
-                                                            @csrf
-                                                            <input type="file" name="cv" required class="text-xs border border-gray-300 rounded-md">
-                                                            <button type="submit"
-                                                                class="bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-1 rounded-md">
-                                                                Lamar
-                                                            </button>
-                                                        </form> --}}
-
                                                         <a href="{{ route('jobs.show', $job->id) }}"
                                                             class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1 rounded-md w-24 text-center">
                                                             Lihat Detail
