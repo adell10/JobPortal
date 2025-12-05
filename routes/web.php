@@ -86,24 +86,22 @@ Route::post('/jobs/{job}/apply',
 'store'])->name('apply.store')->middleware('auth');
 
 // Daftar pelamar (hanya admin)
-Route::get('/applicants',
-[ApplicationController::class,
-'index'])->name('applications.index')->middleware('isAdmin');
-
-// Export data pelamar ke Excel (admin)
-Route::get('/applications/export',[ApplicationController::class, 'export'])
-->name('applications.export')
-->middleware('isAdmin');
+// Route::get('/applicants',
+// [ApplicationController::class,
+// 'index'])->name('applications.index')->middleware('isAdmin');
 
 // CRUD lamaran (admin)
 Route::resource('applications',ApplicationController::class)
-->except(['index', 'show'])
 ->middleware(['auth', 'isAdmin']);
 
 // Lihat detail lamaran (jobseeker/user biasa)
-Route::resource('applications',ApplicationController::class)
+Route::resource('my-applications',ApplicationController::class)
 ->only(['index', 'show'])
-->middleware(['auth']);
+->middleware(['auth'])
+->names([
+    'index' => 'myapplications.index',
+    'show' => 'myapplications.show',
+]);
 
 // Route untuk akses/download CV
 Route::get('/cv/{application}', function ($id) {
